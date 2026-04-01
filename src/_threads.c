@@ -6,7 +6,7 @@
 /*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 18:03:21 by ejones            #+#    #+#             */
-/*   Updated: 2026/03/30 13:06:47 by ejones           ###   ########.fr       */
+/*   Updated: 2026/04/01 17:25:57 by ejones           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	get_death(t_args *args)
 	pthread_mutex_unlock(&args->death_mutex);
 	return (val);
 }
+
 void	set_death(t_args *args)
 {
 	pthread_mutex_lock(&args->death_mutex);
@@ -42,11 +43,11 @@ void	*thread_func(void *arg)
 	while (!get_death(args))
 	{
 		if (ft_eating(philo, left, right))
-			break;
+			break ;
 		if (ft_sleeping(philo))
 			break ;
 		print_action(philo, "is thinking");
-		usleep((args->time_to_die - args->time_to_eat - args->time_to_sleep) * 1000);
+		usleep((args->time_to_die - args->time_to_eat - args->time_to_sleep) * 500);
 	}
 	return (NULL);
 }
@@ -68,6 +69,11 @@ void	*thread_monitor(void *arg)
 			pthread_mutex_lock(&args->meals_mutex[i]);
 			lastmeal = philos[i].last_meal;
 			pthread_mutex_unlock(&args->meals_mutex[i]);
+			if (!philos_not_full(args))
+			{
+				set_death(args);
+				return (NULL);
+			}
 			if (get_time_ms() - lastmeal > args->time_to_die)
 			{
 				set_death(args);
