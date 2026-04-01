@@ -6,12 +6,11 @@
 /*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/21 17:31:30 by ejones            #+#    #+#             */
-/*   Updated: 2026/03/30 12:42:03 by ejones           ###   ########.fr       */
+/*   Updated: 2026/04/01 17:15:23 by ejones           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/philo.h"
-
 
 void	destroy_and_free(t_args *args, pthread_mutex_t *ptr, int max)
 {
@@ -38,6 +37,7 @@ static int	init_mutex(t_args *args, pthread_mutex_t *ptr)
 	}
 	return (0);
 }
+
 int	init_forks_meals_mutex(t_args *args)
 {
 	int	i;
@@ -95,14 +95,13 @@ int	init_struct(t_args *args, char **av)
 	args->time_to_die = ft_atoi(av[2]);
 	args->time_to_eat = ft_atoi(av[3]);
 	args->time_to_sleep = ft_atoi(av[4]);
-	printf("%d\n", ft_atoi(av[5]));
 	if (av[5])
 		args->min_to_eat = ft_atoi(av[5]);
 	else
 		args->min_to_eat = -1;
 	if (args->nbr_philos < 1 || args->time_to_die < 1 || args->time_to_eat < 1
 		|| args->time_to_sleep < 1 || args->min_to_eat == 0
-			|| (args->min_to_eat < -1 || -1 == ft_atoi(av[5])))
+		|| (args->min_to_eat < -1))
 	{
 		printf("The arguments need to be superior to 0\n");
 		return (EXIT_FAILURE);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/01 17:16:49 by ejones            #+#    #+#             */
+/*   Updated: 2026/04/01 17:18:10 by ejones           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -11,7 +23,7 @@
 
 typedef struct timeval	t_timeval;
 
-typedef enum	e_state
+typedef enum e_state
 {
 	DEAD = 1,
 	EATING,
@@ -21,7 +33,7 @@ typedef enum	e_state
 
 typedef struct s_args	t_args;
 
-typedef struct	s_philo
+typedef struct s_philo
 {
 	int			id;
 	size_t		meals_count;
@@ -30,7 +42,7 @@ typedef struct	s_philo
 	t_args		*args;
 }	t_philo;
 
-typedef struct	s_args
+typedef struct s_args
 {
 	int				nbr_philos;
 	int				min_to_eat;	// max nbr meals to eat
@@ -47,16 +59,16 @@ typedef struct	s_args
 	pthread_mutex_t	death_mutex;
 }	t_args;
 
-void		ft_lock(t_philo *philo, int left, int right);
-void		ft_unlock(t_philo *philo, int left, int right);
+void	ft_lock(t_philo *philo, int left, int right);
+void	ft_unlock(t_philo *philo, int left, int right);
 
-time_t		elapsed_time(struct timeval start);
+time_t	elapsed_time(struct timeval start);
 
 // New functions
-int			ft_check_args(int ac, char **av);
-int			init_struct(t_args *args, char **av);
-time_t		get_time_ms(void);
-void		destroy_and_free(t_args *args, pthread_mutex_t *ptr, int max);
+int		ft_check_args(int ac, char **av);
+int		init_struct(t_args *args, char **av);
+time_t	get_time_ms(void);
+void	destroy_and_free(t_args *args, pthread_mutex_t *ptr, int max);
 
 //_threads.c
 int		get_death(t_args *args);
@@ -68,8 +80,11 @@ int		ft_eating(t_philo *philo, short int left, short int right);
 int		ft_sleeping(t_philo *philo);
 
 //utils.c
-int	ft_isdigit(int c);
-int	ft_strcmp(const char *s1, const char *s2);
-int	ft_atoi(const char *nptr);
+int		ft_isdigit(int c);
+int		ft_strcmp(const char *s1, const char *s2);
+int		ft_atoi(const char *nptr);
+
+//tmp.c
+int		philos_not_full(t_args *args);
 
 #endif

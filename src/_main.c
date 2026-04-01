@@ -6,7 +6,7 @@
 /*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 18:30:53 by ejones            #+#    #+#             */
-/*   Updated: 2026/03/30 12:20:40 by ejones           ###   ########.fr       */
+/*   Updated: 2026/04/01 17:14:12 by ejones           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,10 @@ void	free_allocs(t_args *args)
 
 int	main(int ac, char **av)
 {
-	t_args	args = {0};
-	int		i = 0;
+	t_args	args;
+	int		i;
 
+	i = 0;
 	memset(&args, 0, sizeof(t_args));
 	args.start_of_prog = get_time_ms();
 	if (ft_check_args(ac, av) != 0)
@@ -34,8 +35,6 @@ int	main(int ac, char **av)
 		return (2);
 	if (create_threads(&args))
 		free_allocs(&args);
-
-//waiting for the end of threads
 	pthread_join(args.monitor, NULL);
 	while (i < args.nbr_philos)
 		pthread_join(args.philos[i++].thread, NULL);

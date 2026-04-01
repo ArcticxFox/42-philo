@@ -6,7 +6,7 @@
 #    By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/03/19 14:40:08 by ejones            #+#    #+#              #
-#    Updated: 2026/03/27 14:40:47 by ejones           ###   ########.fr        #
+#    Updated: 2026/04/01 17:02:38 by ejones           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ HDR_DIR = ./header
 
 #thread_management.c
 SRC = _check_arguments.c _init_args_structs.c _main.c _philo_actions.c \
-	_threads.c Thread_utils.c get_elapsed_time.c utils.c
+	_threads.c _manage_forks.c get_elapsed_time.c utils.c thread_utils.c
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
 CC = cc
