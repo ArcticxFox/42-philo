@@ -6,7 +6,7 @@
 /*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 17:16:49 by ejones            #+#    #+#             */
-/*   Updated: 2026/04/01 17:18:10 by ejones           ###   ########.fr       */
+/*   Updated: 2026/04/03 14:52:43 by ejones           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,24 +22,15 @@
 # include <pthread.h>
 
 typedef struct timeval	t_timeval;
-
-typedef enum e_state
-{
-	DEAD = 1,
-	EATING,
-	SLEEPING,
-	THINKING
-}	t_state;
-
 typedef struct s_args	t_args;
 
 typedef struct s_philo
 {
-	int			id;
-	size_t		meals_count;
-	time_t		last_meal;
-	pthread_t	thread;
-	t_args		*args;
+	int				id;
+	size_t			meals_count;
+	time_t			last_meal;
+	pthread_t		thread;
+	t_args			*args;
 }	t_philo;
 
 typedef struct s_args
