@@ -6,7 +6,7 @@
 /*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 18:03:21 by ejones            #+#    #+#             */
-/*   Updated: 2026/04/01 17:25:57 by ejones           ###   ########.fr       */
+/*   Updated: 2026/04/03 14:50:06 by ejones           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	get_death(t_args *args)
 	return (val);
 }
 
-void	set_death(t_args *args)
+static void	set_death(t_args *args)
 {
 	pthread_mutex_lock(&args->death_mutex);
 	args->death = 1;
@@ -51,11 +51,32 @@ void	*thread_func(void *arg)
 	}
 	return (NULL);
 }
+static int	end_simulation(t_args *args, int i)
+{
+	time_t	lastmeal;
+	t_philo	*philos;
+
+	philos = args->philos;
+	pthread_mutex_lock(&args->meals_mutex[i]);
+	lastmeal = philos[i].last_meal;
+	pthread_mutex_unlock(&args->meals_mutex[i]);
+	if (!philos_not_full(args))
+	{
+		set_death(args);
+		return (EXIT_FAILURE);
+	}
+	if (get_time_ms() - lastmeal > args->time_to_die)
+	{
+		set_death(args);
+		print_action(&philos[i], "died");
+		return (EXIT_FAILURE);
+	}
+	return (EXIT_SUCCESS);
+}
 
 void	*thread_monitor(void *arg)
 {
 	int		i;
-	time_t	lastmeal;
 	t_args	*args;
 	t_philo	*philos;
 
@@ -66,20 +87,8 @@ void	*thread_monitor(void *arg)
 		i = 0;
 		while (i < args->nbr_philos)
 		{
-			pthread_mutex_lock(&args->meals_mutex[i]);
-			lastmeal = philos[i].last_meal;
-			pthread_mutex_unlock(&args->meals_mutex[i]);
-			if (!philos_not_full(args))
-			{
-				set_death(args);
+			if (end_simulation(args, i))
 				return (NULL);
-			}
-			if (get_time_ms() - lastmeal > args->time_to_die)
-			{
-				set_death(args);
-				print_action(&philos[i], "died");
-				return (NULL);
-			}
 			i++;
 		}
 		usleep(100);
