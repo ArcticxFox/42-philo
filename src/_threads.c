@@ -6,30 +6,13 @@
 /*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 18:03:21 by ejones            #+#    #+#             */
-/*   Updated: 2026/04/03 14:50:06 by ejones           ###   ########.fr       */
+/*   Updated: 2026/04/07 19:37:03 by ejones           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/philo.h"
 
-int	get_death(t_args *args)
-{
-	int	val;
-
-	pthread_mutex_lock(&args->death_mutex);
-	val = args->death;
-	pthread_mutex_unlock(&args->death_mutex);
-	return (val);
-}
-
-static void	set_death(t_args *args)
-{
-	pthread_mutex_lock(&args->death_mutex);
-	args->death = 1;
-	pthread_mutex_unlock(&args->death_mutex);
-}
-
-void	*thread_func(void *arg)
+static void	*thread_func(void *arg)
 {
 	t_philo		*philo;
 	t_args		*args;
@@ -46,8 +29,8 @@ void	*thread_func(void *arg)
 			break ;
 		if (ft_sleeping(philo))
 			break ;
-		print_action(philo, "is thinking");
-		usleep((args->time_to_die - args->time_to_eat - args->time_to_sleep) * 500);
+		if (ft_thinking(philo, args->time_to_eat + args->time_to_sleep))
+			break;
 	}
 	return (NULL);
 }
@@ -57,9 +40,9 @@ static int	end_simulation(t_args *args, int i)
 	t_philo	*philos;
 
 	philos = args->philos;
-	pthread_mutex_lock(&args->meals_mutex[i]);
+	pthread_mutex_lock(&args->philos[i].meals_mutex);
 	lastmeal = philos[i].last_meal;
-	pthread_mutex_unlock(&args->meals_mutex[i]);
+	pthread_mutex_unlock(&args->philos[i].meals_mutex);
 	if (!philos_not_full(args))
 	{
 		set_death(args);
@@ -74,7 +57,7 @@ static int	end_simulation(t_args *args, int i)
 	return (EXIT_SUCCESS);
 }
 
-void	*thread_monitor(void *arg)
+static void	*thread_monitor(void *arg)
 {
 	int		i;
 	t_args	*args;
@@ -91,7 +74,7 @@ void	*thread_monitor(void *arg)
 				return (NULL);
 			i++;
 		}
-		usleep(100);
+		usleep(200);
 	}
 	return (NULL);
 }

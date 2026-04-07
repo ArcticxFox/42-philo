@@ -6,7 +6,7 @@
 /*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 15:20:32 by ejones            #+#    #+#             */
-/*   Updated: 2026/04/01 16:24:42 by ejones           ###   ########.fr       */
+/*   Updated: 2026/04/07 19:27:17 by ejones           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,9 @@ int	ft_eating(t_philo *philo, short int left, short int right)
 		return (EXIT_FAILURE);
 	ft_lock(philo, left, right);
 	start = get_time_ms();
-	pthread_mutex_lock(&philo->args->meals_mutex[philo->id]);
+	pthread_mutex_lock(&philo->args->philos[philo->id].meals_mutex);
 	philo->last_meal = get_time_ms();
-	pthread_mutex_unlock(&philo->args->meals_mutex[philo->id]);
+	pthread_mutex_unlock(&philo->args->philos[philo->id].meals_mutex);
 	print_action(philo, "is eating");
 	while (get_time_ms() - start < philo->args->time_to_eat)
 	{
@@ -56,9 +56,9 @@ int	ft_eating(t_philo *philo, short int left, short int right)
 		usleep(200);
 	}
 	ft_unlock(philo, left, right);
-	pthread_mutex_lock(&philo->args->meals_mutex[philo->id]);
+	pthread_mutex_lock(&philo->args->philos[philo->id].meals_mutex);
 	philo->meals_count++;
-	pthread_mutex_unlock(&philo->args->meals_mutex[philo->id]);
+	pthread_mutex_unlock(&philo->args->philos[philo->id].meals_mutex);
 	return (EXIT_SUCCESS);
 }
 
@@ -67,12 +67,31 @@ int	ft_sleeping(t_philo *philo)
 	time_t	start;
 	time_t	time_to_sleep;
 
-	start = get_time_ms();
-	time_to_sleep = philo->args->time_to_sleep;
 	if (get_death(philo->args))
 		return (EXIT_FAILURE);
+	start = get_time_ms();
+	time_to_sleep = philo->args->time_to_sleep;
 	print_action(philo, "is sleeping");
 	while (get_time_ms() - start < time_to_sleep)
+	{
+		if (get_death(philo->args))
+			return (EXIT_FAILURE);
+		usleep(100);
+	}
+	return (EXIT_SUCCESS);
+}
+
+int	ft_thinking(t_philo *philo, time_t time)
+{
+	time_t	start;
+	time_t	time_to_think;
+
+	if (get_death(philo->args))
+		return (EXIT_FAILURE);
+	start = get_time_ms();
+	time_to_think = ((philo->args->time_to_die - time - 1000) * 500);
+	print_action(philo, "is thinking");
+	while (get_time_ms() - start < time_to_think)
 	{
 		if (get_death(philo->args))
 			return (EXIT_FAILURE);
