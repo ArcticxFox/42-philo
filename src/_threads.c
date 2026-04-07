@@ -6,7 +6,7 @@
 /*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 18:03:21 by ejones            #+#    #+#             */
-/*   Updated: 2026/04/07 19:37:03 by ejones           ###   ########.fr       */
+/*   Updated: 2026/04/07 21:00:04 by ejones           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,11 @@ static void	*thread_func(void *arg)
 		if (ft_sleeping(philo))
 			break ;
 		if (ft_thinking(philo, args->time_to_eat + args->time_to_sleep))
-			break;
+			break ;
 	}
 	return (NULL);
 }
+
 static int	end_simulation(t_args *args, int i)
 {
 	time_t	lastmeal;
@@ -79,7 +80,7 @@ static void	*thread_monitor(void *arg)
 	return (NULL);
 }
 
-int	create_threads(t_args *args)
+int	init_philo_threads(t_args *args)
 {
 	int	i;
 
@@ -91,24 +92,32 @@ int	create_threads(t_args *args)
 		args->philos[i].last_meal = args->start_of_prog;
 		args->philos[i].args = args;
 		if (pthread_create(&args->philos[i].thread, NULL, thread_func,
-			&args->philos[i]) != 0)
+				&args->philos[i]) != 0)
 		{
-			printf("A Philo %d pthread_create FAILED\n", i);
 			set_death(args);
+			printf("A Philo %d pthread_create FAILED\n", i);
 			while (--i >= 0)
 				pthread_join(args->philos[i].thread, NULL);
 			return (EXIT_FAILURE);
 		}
 		i++;
 	}
+	return (EXIT_SUCCESS);
+}
+
+int	create_threads(t_args *args)
+{
+	int	i;
+
+	i = args->nbr_philos;
+	if (init_philo_threads(args))
+		return (EXIT_FAILURE);
 	if (pthread_create(&args->monitor, NULL, thread_monitor, args) != 0)
 	{
 		printf("monitoring thread creation failed\n");
-		i = args->nbr_philos;
 		while (--i >= 0)
 			pthread_join(args->philos[i].thread, NULL);
 		return (EXIT_FAILURE);
 	}
 	return (EXIT_SUCCESS);
 }
-
