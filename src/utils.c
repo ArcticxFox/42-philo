@@ -6,7 +6,7 @@
 /*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 14:38:24 by ejones            #+#    #+#             */
-/*   Updated: 2026/03/30 12:51:09 by ejones           ###   ########.fr       */
+/*   Updated: 2026/04/07 18:29:25 by ejones           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,10 @@ int	ft_atoi(const char *nptr)
 
 	res = 0;
 	i = 1;
+	if (!nptr)
+		return (0);
 	while ((*nptr >= 9 && *nptr <= 13) || *nptr == ' ')
-	{
 		nptr++;
-	}
 	if ((*nptr == '+' || *nptr == '-'))
 	{
 		if (*nptr == '-')

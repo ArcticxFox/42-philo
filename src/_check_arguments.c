@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   check_arguments.c                                  :+:      :+:    :+:   */
+/*   _check_arguments.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/19 14:38:26 by ejones            #+#    #+#             */
-/*   Updated: 2026/03/23 15:01:59 by ejones           ###   ########.fr       */
+/*   Updated: 2026/04/07 18:37:57 by ejones           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	print_format(void)
 	printf("<time in ms> <time in ms> <number of meals to eat>\n");
 }
 
-int	ft_isnb(char *str)
+static int	ft_isnb(char *str)
 {
 	int	i;
 
