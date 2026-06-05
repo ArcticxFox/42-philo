@@ -6,7 +6,7 @@
 /*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 15:20:32 by ejones            #+#    #+#             */
-/*   Updated: 2026/04/07 19:27:17 by ejones           ###   ########.fr       */
+/*   Updated: 2026/06/05 17:08:10 by ejones           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	print_action(t_philo *philo, char *str)
 	timestamp = get_time_ms() - philo->args->start_of_prog;
 	if (ft_strcmp(str, "died") == 0)
 	{
-		printf("%zu %d died\n", timestamp, philo->id);
+		printf("%zu %d died\n", timestamp, philo->id + 1);
 	}
 	else if (!get_death(philo->args))
 	{
@@ -40,12 +40,18 @@ int	ft_eating(t_philo *philo, short int left, short int right)
 
 	if (get_death(philo->args))
 		return (EXIT_FAILURE);
+	if (philo->args->nbr_philos == 1)
+	{
+		pthread_mutex_lock(&philo->args->forks[left]);
+		print_action(philo, "has taken a fork");
+		while (!get_death(philo->args))
+			usleep(200);
+		pthread_mutex_unlock(&philo->args->forks[left]);
+		return (EXIT_FAILURE);
+	}
 	ft_lock(philo, left, right);
 	start = get_time_ms();
-	pthread_mutex_lock(&philo->args->philos[philo->id].meals_mutex);
-	philo->last_meal = get_time_ms();
-	pthread_mutex_unlock(&philo->args->philos[philo->id].meals_mutex);
-	print_action(philo, "is eating");
+	meal_mutex(philo, 0);
 	while (get_time_ms() - start < philo->args->time_to_eat)
 	{
 		if (get_death(philo->args))
@@ -56,9 +62,7 @@ int	ft_eating(t_philo *philo, short int left, short int right)
 		usleep(200);
 	}
 	ft_unlock(philo, left, right);
-	pthread_mutex_lock(&philo->args->philos[philo->id].meals_mutex);
-	philo->meals_count++;
-	pthread_mutex_unlock(&philo->args->philos[philo->id].meals_mutex);
+	meal_mutex(philo, 1);
 	return (EXIT_SUCCESS);
 }
 

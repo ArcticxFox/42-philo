@@ -6,7 +6,7 @@
 /*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/01 17:16:49 by ejones            #+#    #+#             */
-/*   Updated: 2026/04/07 18:59:12 by ejones           ###   ########.fr       */
+/*   Updated: 2026/06/05 16:49:14 by ejones           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	destroy_and_free(t_args *args, pthread_mutex_t *ptr, int max);
 int		create_threads(t_args *args);
 
 //_manage_forks.c
+void	meal_mutex(t_philo *philo, short int i);
 void	ft_lock(t_philo *philo, int left, int right);
 void	ft_unlock(t_philo *philo, int left, int right);
 
