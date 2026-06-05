@@ -6,7 +6,7 @@
 /*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 18:03:21 by ejones            #+#    #+#             */
-/*   Updated: 2026/06/05 17:07:34 by ejones           ###   ########.fr       */
+/*   Updated: 2026/06/05 17:17:54 by ejones           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void	*thread_func(void *arg)
 			break ;
 		if (ft_thinking(philo, args->time_to_eat + args->time_to_sleep))
 			break ;
-		}
+	}
 	return (NULL);
 }
 
@@ -62,10 +62,8 @@ static void	*thread_monitor(void *arg)
 {
 	int		i;
 	t_args	*args;
-	// t_philo	*philos;
 
 	args = (t_args *)arg;
-	// philos = args->philos;
 	while (!get_death(args))
 	{
 		i = 0;

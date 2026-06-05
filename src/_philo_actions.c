@@ -6,7 +6,7 @@
 /*   By: ejones <ejones.42angouleme@gmail.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/24 15:20:32 by ejones            #+#    #+#             */
-/*   Updated: 2026/06/05 17:08:10 by ejones           ###   ########.fr       */
+/*   Updated: 2026/06/05 17:20:29 by ejones           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,16 @@ void	print_action(t_philo *philo, char *str)
 	pthread_mutex_unlock(&philo->args->print_mutex);
 }
 
+int	phil_trying_to_eat(t_philo *phil, int left)
+{
+	pthread_mutex_lock(&phil->args->forks[left]);
+	print_action(phil, "has taken a fork");
+	while (!get_death(phil->args))
+		usleep(200);
+	pthread_mutex_unlock(&phil->args->forks[left]);
+	return (EXIT_FAILURE);
+}
+
 int	ft_eating(t_philo *philo, short int left, short int right)
 {
 	time_t	start;
@@ -41,14 +51,8 @@ int	ft_eating(t_philo *philo, short int left, short int right)
 	if (get_death(philo->args))
 		return (EXIT_FAILURE);
 	if (philo->args->nbr_philos == 1)
-	{
-		pthread_mutex_lock(&philo->args->forks[left]);
-		print_action(philo, "has taken a fork");
-		while (!get_death(philo->args))
-			usleep(200);
-		pthread_mutex_unlock(&philo->args->forks[left]);
-		return (EXIT_FAILURE);
-	}
+		if (phil_trying_to_eat(philo, left))
+			return (EXIT_FAILURE);
 	ft_lock(philo, left, right);
 	start = get_time_ms();
 	meal_mutex(philo, 0);
