@@ -36,7 +36,7 @@
 		./philo <nb_of_philos> <time_to_die> "<time_to_eat> <time_to_sleep> <number_of_meals_to_eat>
 		```
 		**_<number_of_meals_to_eat>_** is optional
-- ## Resources
+- ## Ressources
 	links :
 	- [Undetsanding threads](https://franckh.developpez.com/tutoriels/posix/pthreads/)
 
